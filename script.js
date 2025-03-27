@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Manage multi Discord accounts
 // @namespace    http://tampermonkey.net/
-// @version      6.2
+// @version      6.1
 // @description  Discord accounts
 // @author       AARR
 // @match        https://discord.com/*
@@ -9,15 +9,15 @@
 // @grant        GM_getValue
 // @license      You can modify as long as you credit me
 // ==/UserScript==
-
+ 
 (function() {
     'use strict';
-
+ 
     const maxTokens = 50;
     let currentGroup = GM_getValue('currentGroup', 'A');
     let isBoxVisible = false;
-
-
+ 
+ 
     const toggleImage = document.createElement('img');
     toggleImage.src = 'https://i.imgur.com/RbbQDhI.png';
     toggleImage.style.position = 'fixed';
@@ -28,27 +28,27 @@
     toggleImage.style.left = '75px';
     toggleImage.style.bottom = '156px';
     document.body.appendChild(toggleImage);
-
+ 
     toggleImage.addEventListener('click', () => {
     isBoxVisible = !isBoxVisible;
     mainContainer.style.display = isBoxVisible ? 'block' : 'none';
     saveToggleImageVisibility();
 });
-
-
+ 
+ 
 function saveToggleImageVisibility() {
     GM_setValue('isBoxVisible', isBoxVisible);
 }
-
-
-
-
+ 
+ 
+ 
+ 
     const container = document.createElement('div');
     container.innerHTML = `
         <div id="mainContainer" style="position: fixed; bottom: 200px; right: 10px; background-color: #2f3136; color: #ffffff; padding: 10px; border-radius: 5px; z-index: 1000; width: 175px; height: 29px; overflow-y: auto;">
             <button id="toggleButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">Token Login</button>
             <div id="content" style="display: none;">
-                <h2 style="margin: 0 0 10px 0;">AARR Multi Token Login V6.2</h2>
+                <h2 style="margin: 0 0 10px 0;">AARR Multi Token Login V6.1</h2>
                 <a href="https://aarr-homepage.github.io/page/about5.html" target="_blank" style="color: #00BFFF; text-decoration: underline; display: block; margin-bottom: 10px;">🔧other tools</a>
                 <a href="https://greasyfork.org/ja/scripts/523829-manage-multi-discord-accounts/code" target="_blank" style="color: #00BFFF; text-decoration: underline; display: block; margin-bottom: 10px;">⚙️source code</a>
                 <div id="groupButtons" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
@@ -82,8 +82,8 @@ function saveToggleImageVisibility() {
             </div>
         </div>
     `;
-       document.body.appendChild(container);
-
+    document.body.appendChild(container);
+ 
     const toggleButton = document.getElementById('toggleButton');
     const saveButton = document.getElementById('saveButton');
     const loadButton = document.getElementById('loadButton');
@@ -101,7 +101,7 @@ function saveToggleImageVisibility() {
     const groupBButton = document.getElementById('groupB');
     const groupCButton = document.getElementById('groupC');
     const newTabCheckbox = document.getElementById('newTabCheckbox');
-
+ 
     toggleButton.addEventListener('click', toggleContainer);
     saveButton.addEventListener('click', saveTokensToFile);
     loadButton.addEventListener('click', () => fileInput.click());
@@ -114,7 +114,7 @@ function saveToggleImageVisibility() {
     groupBButton.addEventListener('click', () => switchGroup('B'));
     groupCButton.addEventListener('click', () => switchGroup('C'));
     newTabCheckbox.addEventListener('change', () => GM_setValue('newTabCheckbox', newTabCheckbox.checked));
-
+ 
     const buttons = [toggleButton, saveButton, loadButton, hideButton, autoLoginButton, reloginButton, channelAccessButton];
     buttons.forEach(button => {
         button.addEventListener('mouseover', () => {
@@ -128,7 +128,7 @@ function saveToggleImageVisibility() {
             button.style.backgroundColor = '#575757';
         });
     });
-
+ 
     function switchGroup(group) {
         saveToLocalStorage();
         currentGroup = group;
@@ -136,7 +136,7 @@ function saveToggleImageVisibility() {
         loadFromLocalStorage();
         updateGroupButtonStyles();
     }
-
+ 
     function updateGroupButtonStyles() {
         const groupButtons = [groupAButton, groupBButton, groupCButton];
         groupButtons.forEach(button => {
@@ -149,7 +149,7 @@ function saveToggleImageVisibility() {
             }
         });
     }
-
+ 
     let isMinimized = GM_getValue('isMinimized', true);
     function toggleContainer() {
         isMinimized = !isMinimized;
@@ -161,7 +161,7 @@ function saveToggleImageVisibility() {
         toggleButton.textContent = isMinimized ? 'Token Login' : '⛔Minimize';
         GM_setValue('isMinimized', isMinimized);
     }
-
+ 
     let areInputsVisible = GM_getValue('areInputsVisible', true);
     function toggleTokenInputs() {
         areInputsVisible = !areInputsVisible;
@@ -171,7 +171,7 @@ function saveToggleImageVisibility() {
         });
         GM_setValue('areInputsVisible', areInputsVisible);
     }
-
+ 
     function login(token) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
@@ -194,7 +194,7 @@ function saveToggleImageVisibility() {
             }
         }, 1000);
     }
-
+ 
     function relogin() {
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
@@ -207,7 +207,7 @@ function saveToggleImageVisibility() {
             alert('No previously used token found. Please use a token first.');
         }
     }
-
+ 
     function channelAccess() {
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
@@ -220,7 +220,7 @@ function saveToggleImageVisibility() {
             alert('No previously used token found. Please use a token first.');
         }
     }
-
+ 
     function reloginToken(token) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
@@ -235,7 +235,7 @@ function saveToggleImageVisibility() {
             }
         }, 1000);
     }
-
+ 
     function channelAccessToken(token) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
@@ -250,33 +250,33 @@ function saveToggleImageVisibility() {
             }
         }, 1000);
     }
-
+ 
     function formatURL(url) {
         if (!url) {
             return '';
         }
-
+ 
         if (url.startsWith('discord.gg/')) {
             return `https://${url}`;
         } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
             return `https://discord.gg/${url}`;
         }
-
+ 
         return url;
     }
-
+ 
     function formatChannelURL(url) {
         if (!url) {
             return '';
         }
-
+ 
         if (url.startsWith('https://discord.com/channels/')) {
             return url;
         } else {
             return `https://discord.com/channels/${url}`;
         }
     }
-
+ 
     function saveToLocalStorage() {
         const tokens = [];
         for (let i = 1; i <= maxTokens; i++) {
@@ -288,26 +288,15 @@ function saveToggleImageVisibility() {
         GM_setValue(`${currentGroup}_channelUrlInput`, channelUrlInput.value);
         GM_setValue('newTabCheckbox', newTabCheckbox.checked);
     }
-
+ 
     function loadFromLocalStorage() {
         for (let i = 1; i <= maxTokens; i++) {
             const tokenInput = document.getElementById(`tokenInput${i}`);
             const savedToken = GM_getValue(`${currentGroup}_tokenInput${i}`, '');
             tokenInput.value = savedToken;
-
             const contactButton = document.getElementById(`contactButton${i}`);
-            if (tokenInput.value.trim() === '') {
-                contactButton.disabled = true;
-                contactButton.style.backgroundColor = '#000000';
-                contactButton.removeEventListener('mouseover', buttonMouseOver);
-                contactButton.removeEventListener('mouseout', buttonMouseOut);
-            } else {
-                contactButton.disabled = false;
-                const isGreen = GM_getValue(`${currentGroup}_contactButton${i}_isGreen`, false);
-                contactButton.style.backgroundColor = isGreen ? '#228B22' : '#575757';
-                contactButton.addEventListener('mouseover', buttonMouseOver);
-                contactButton.addEventListener('mouseout', buttonMouseOut);
-            }
+            const isGreen = GM_getValue(`${currentGroup}_contactButton${i}_isGreen`, false);
+            contactButton.style.backgroundColor = isGreen ? '#228B22' : '#575757';
         }
         const savedURL = GM_getValue(`${currentGroup}_urlInput`, '');
         urlInput.value = savedURL;
@@ -315,7 +304,7 @@ function saveToggleImageVisibility() {
         channelUrlInput.value = savedChannelURL;
         newTabCheckbox.checked = GM_getValue('newTabCheckbox', false);
     }
-
+ 
     function saveTokensToFile() {
         const tokens = [];
         for (let i = 1; i <= maxTokens; i++) {
@@ -332,7 +321,7 @@ function saveToggleImageVisibility() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
-
+ 
     function loadTokensFromFile(event) {
         const file = event.target.files[0];
         if (file) {
@@ -344,15 +333,14 @@ function saveToggleImageVisibility() {
                     if (tokenInput) {
                         tokenInput.value = token.trim();
                         GM_setValue(`${currentGroup}_tokenInput${index + 1}`, token.trim());
-                        updateButtonState(tokenInput, `contactButton${index + 1}`);
                     }
                 });
             };
             reader.readAsText(file);
         }
     }
-
-    function autoLogin() {
+ 
+        function autoLogin() {
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
             const lastClickedButtonIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
@@ -376,96 +364,78 @@ function saveToggleImageVisibility() {
             }
         }
     }
-
-    function buttonMouseOver(event) {
-        event.target.style.backgroundColor = '#228B22';
-    }
-
-    function buttonMouseOut(event) {
-        const index = event.target.id.replace('contactButton', '');
-        const isGreen = GM_getValue(`${currentGroup}_contactButton${index}_isGreen`, false);
-        if (!isGreen) {
-            event.target.style.backgroundColor = '#575757';
-        }
-    }
-
-    function updateButtonState(tokenInput, buttonId) {
-        const contactButton = document.getElementById(buttonId);
-        if (tokenInput.value.trim() === '') {
-            contactButton.disabled = true;
-            contactButton.style.backgroundColor = '#000000';
-            contactButton.removeEventListener('mouseover', buttonMouseOver);
-            contactButton.removeEventListener('mouseout', buttonMouseOut);
-        } else {
-            contactButton.disabled = false;
-            contactButton.style.backgroundColor = '#575757';
-            contactButton.addEventListener('mouseover', buttonMouseOver);
-            contactButton.addEventListener('mouseout', buttonMouseOut);
-        }
-    }
-
+ 
     for (let i = 1; i <= maxTokens; i++) {
         const contactButton = document.getElementById(`contactButton${i}`);
         const tokenInput = document.getElementById(`tokenInput${i}`);
-
-        updateButtonState(tokenInput, `contactButton${i}`);
-
+ 
         contactButton.addEventListener('click', () => {
             const token = tokenInput.value.trim();
             if (token) {
                 login(token);
-
+ 
                 localStorage.setItem(`${currentGroup}_lastClickedButton`, `contactButton${i}`);
-
+ 
                 for (let j = 1; j <= maxTokens; j++) {
                     const btn = document.getElementById(`contactButton${j}`);
                     btn.style.backgroundColor = '#575757';
                     GM_setValue(`${currentGroup}_contactButton${j}_isGreen`, false);
                 }
-
+ 
                 contactButton.style.backgroundColor = '#228B22';
                 GM_setValue(`${currentGroup}_contactButton${i}_isGreen`, true);
-
+ 
                 localStorage.setItem(`${currentGroup}_lastUsedToken`, token);
             } else {
                 alert('Please enter a valid token!');
             }
         });
-
+ 
+        contactButton.addEventListener('mouseover', (event) => {
+            event.target.style.backgroundColor = '#228B22';
+        });
+ 
+        contactButton.addEventListener('mouseout', (event) => {
+            const isGreen = GM_getValue(`${currentGroup}_contactButton${i}_isGreen`, false);
+            if (!isGreen) {
+                event.target.style.backgroundColor = '#575757';
+            }
+        });
+ 
         tokenInput.addEventListener('input', () => {
             saveToLocalStorage();
-            updateButtonState(tokenInput, `contactButton${i}`);
         });
     }
-
-    window.addEventListener('load', () => {
-        loadFromLocalStorage();
-        const isMinimized = GM_getValue('isMinimized', true);
-        areInputsVisible = GM_getValue('areInputsVisible', true);
-        isBoxVisible = GM_getValue('isBoxVisible', false);
-        content.style.display = isMinimized ? 'none' : 'block';
-        mainContainer.style.display = isBoxVisible ? 'block' : 'none';
-        mainContainer.style.height = isMinimized ? '29px' : '727px';
-        mainContainer.style.top = isMinimized ? 'auto' : '5%';
-        mainContainer.style.bottom = isMinimized ? '105px' : 'auto';
-        toggleButton.style.padding = '10px';
-        toggleButton.textContent = isMinimized ? 'Token Login' : '⛔Minimize';
-
-        const tokenInputs = tokenInputsContainer.querySelectorAll('input[type="text"]');
-        tokenInputs.forEach(input => {
-            input.style.display = areInputsVisible ? 'block' : 'none';
-        });
-
-        const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
-        if (lastClickedButtonId) {
-            const lastClickedButton = document.getElementById(lastClickedButtonId);
-            if (lastClickedButton) {
-                lastClickedButton.style.backgroundColor = '#228B22';
-            }
-        }
-
-        updateGroupButtonStyles();
+ 
+ 
+window.addEventListener('load', () => {
+    loadFromLocalStorage();
+    const isMinimized = GM_getValue('isMinimized', true);
+    areInputsVisible = GM_getValue('areInputsVisible', true);
+    isBoxVisible = GM_getValue('isBoxVisible', false);
+    content.style.display = isMinimized ? 'none' : 'block';
+    mainContainer.style.display = isBoxVisible ? 'block' : 'none';
+    mainContainer.style.height = isMinimized ? '29px' : '727px';
+    mainContainer.style.top = isMinimized ? 'auto' : '5%';
+    mainContainer.style.bottom = isMinimized ? '105px' : 'auto';
+    toggleButton.style.padding = '10px';
+    toggleButton.textContent = isMinimized ? 'Token Login' : '⛔Minimize';
+ 
+    const tokenInputs = tokenInputsContainer.querySelectorAll('input[type="text"]');
+    tokenInputs.forEach(input => {
+        input.style.display = areInputsVisible ? 'block' : 'none';
     });
-
+ 
+    const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
+    if (lastClickedButtonId) {
+        const lastClickedButton = document.getElementById(lastClickedButtonId);
+        if (lastClickedButton) {
+            lastClickedButton.style.backgroundColor = '#228B22';
+        }
+    }
+ 
+    updateGroupButtonStyles();
+});
+ 
     window.addEventListener('beforeunload', saveToLocalStorage);
 })();
