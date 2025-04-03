@@ -469,7 +469,6 @@ function saveToggleImageVisibility() {
     window.addEventListener('beforeunload', saveToLocalStorage);
 })();
 
-
 (function() {
     'use strict';
  
@@ -832,7 +831,6 @@ function saveToggleImageVisibility() {
         container.style.display = isBoxVisible ? 'block' : 'none';
     });
 })();
-
 
 (function() {
     'use strict';
