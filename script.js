@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         discord token login / AARR Manage multi Discord accounts 
 // @namespace    http://tampermonkey.net/
-// @version      6.2
+// @version      6.3
 // @description  The best token loginer with the most features by AARR
 // @author       AARR
 // @match        https://discord.com/*
@@ -62,7 +62,7 @@
                 <h5 style="margin: 0 0 10px 0;">Invite URL</h5>
                 <input type="text" id="urlInput" placeholder="redirect login invite URL" style="width: 100%; margin-bottom: 5px; display: block; background-color: #2f3136; color: #32CD32; border: 1px solid #32CD32; padding: 5px;">
                 <button id="reloginButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">🔄Relogin</button>
-                <button id="autoLoginButton" style="width: 100%; margin-bottom: 10px; padding: 20px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">🟢auto login</button>
+                <button id="autoLoginButton" style="width: 100%; margin-bottom: 10px; padding: 20px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">🟢Auto switch login</button>
                 <h5 style="margin: 0 0 10px 0;">Channel URL</h5>
                 <input type="text" id="channelUrlInput" placeholder="Channel/Message URL" style="width: 100%; margin-bottom: 5px; display: block; background-color: #2f3136; color: #32CD32; border: 1px solid #32CD32; padding: 5px;">
                 <button id="channelAccessButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">📌Channel access</button>
@@ -347,15 +347,15 @@
         }
     }
 
-    // 新しいauto loginボタン名とトークンインデックス表示
+   
     function updateAutoLoginButtonText() {
-        // 現在のtoken index
+       
         let currentIndex = 0;
         let lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
             currentIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
         }
-        // セットされてるtoken数
+        
         let setCount = 0;
         for (let i = 1; i <= maxTokens; i++) {
             const tokenInput = document.getElementById(`tokenInput${i}`);
@@ -380,7 +380,7 @@
         if (lastClickedButtonId) {
             const lastClickedButtonIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
             let nextButtonIndex = lastClickedButtonIndex + 1;
-            // 次にセットされてるtokenを探す
+           
             while (nextButtonIndex <= maxTokens) {
                 const tokenInput = document.getElementById(`tokenInput${nextButtonIndex}`);
                 if (tokenInput && tokenInput.value.trim() !== '') break;
@@ -388,7 +388,7 @@
             }
             if (nextButtonIndex > maxTokens || nextButtonIndex > setCount) {
                 alert('No more tokens available for auto login. Returning to the first token.');
-                // 最初にセットされてるtokenへ
+               
                 for (let i = 1; i <= maxTokens; i++) {
                     const tokenInput = document.getElementById(`tokenInput${i}`);
                     if (tokenInput && tokenInput.value.trim() !== '') {
@@ -404,7 +404,7 @@
                 }
             }
         } else {
-            // 最初にセットされてるtokenへ
+            
             for (let i = 1; i <= maxTokens; i++) {
                 const tokenInput = document.getElementById(`tokenInput${i}`);
                 if (tokenInput && tokenInput.value.trim() !== '') {
