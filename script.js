@@ -9,15 +9,14 @@
 // @grant        GM_getValue
 // @license      You can modify as long as you credit me
 // ==/UserScript==
- 
+
 (function() {
     'use strict';
- 
+
     const maxTokens = 100;
     let currentGroup = GM_getValue('currentGroup', 'A');
     let isBoxVisible = false;
- 
- 
+
     const toggleImage = document.createElement('img');
     toggleImage.src = 'https://i.imgur.com/RbbQDhI.png';
     toggleImage.style.position = 'fixed';
@@ -28,21 +27,17 @@
     toggleImage.style.left = '75px';
     toggleImage.style.bottom = '156px';
     document.body.appendChild(toggleImage);
- 
+
     toggleImage.addEventListener('click', () => {
-    isBoxVisible = !isBoxVisible;
-    mainContainer.style.display = isBoxVisible ? 'block' : 'none';
-    saveToggleImageVisibility();
-});
- 
- 
-function saveToggleImageVisibility() {
-    GM_setValue('isBoxVisible', isBoxVisible);
-}
- 
- 
- 
- 
+        isBoxVisible = !isBoxVisible;
+        mainContainer.style.display = isBoxVisible ? 'block' : 'none';
+        saveToggleImageVisibility();
+    });
+
+    function saveToggleImageVisibility() {
+        GM_setValue('isBoxVisible', isBoxVisible);
+    }
+
     const container = document.createElement('div');
     container.innerHTML = `
         <div id="mainContainer" style="position: fixed; bottom: 200px; right: 10px; background-color: #2f3136; color: #ffffff; padding: 10px; border-radius: 5px; z-index: 1000; width: 175px; height: 29px; overflow-y: auto;">
@@ -67,7 +62,7 @@ function saveToggleImageVisibility() {
                 <h5 style="margin: 0 0 10px 0;">Invite URL</h5>
                 <input type="text" id="urlInput" placeholder="redirect login invite URL" style="width: 100%; margin-bottom: 5px; display: block; background-color: #2f3136; color: #32CD32; border: 1px solid #32CD32; padding: 5px;">
                 <button id="reloginButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">🔄Relogin</button>
-                <button id="autoLoginButton" style="width: 100%; margin-bottom: 10px; padding: 20px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">🟢Auto Token Switch Login</button>
+                <button id="autoLoginButton" style="width: 100%; margin-bottom: 10px; padding: 20px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">🟢auto login</button>
                 <h5 style="margin: 0 0 10px 0;">Channel URL</h5>
                 <input type="text" id="channelUrlInput" placeholder="Channel/Message URL" style="width: 100%; margin-bottom: 5px; display: block; background-color: #2f3136; color: #32CD32; border: 1px solid #32CD32; padding: 5px;">
                 <button id="channelAccessButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">📌Channel access</button>
@@ -82,8 +77,8 @@ function saveToggleImageVisibility() {
             </div>
         </div>
     `;
-       document.body.appendChild(container);
- 
+    document.body.appendChild(container);
+
     const toggleButton = document.getElementById('toggleButton');
     const saveButton = document.getElementById('saveButton');
     const loadButton = document.getElementById('loadButton');
@@ -101,7 +96,7 @@ function saveToggleImageVisibility() {
     const groupBButton = document.getElementById('groupB');
     const groupCButton = document.getElementById('groupC');
     const newTabCheckbox = document.getElementById('newTabCheckbox');
- 
+
     toggleButton.addEventListener('click', toggleContainer);
     saveButton.addEventListener('click', saveTokensToFile);
     loadButton.addEventListener('click', () => fileInput.click());
@@ -114,7 +109,7 @@ function saveToggleImageVisibility() {
     groupBButton.addEventListener('click', () => switchGroup('B'));
     groupCButton.addEventListener('click', () => switchGroup('C'));
     newTabCheckbox.addEventListener('change', () => GM_setValue('newTabCheckbox', newTabCheckbox.checked));
- 
+
     const buttons = [toggleButton, saveButton, loadButton, hideButton, autoLoginButton, reloginButton, channelAccessButton];
     buttons.forEach(button => {
         button.addEventListener('mouseover', () => {
@@ -128,15 +123,16 @@ function saveToggleImageVisibility() {
             button.style.backgroundColor = '#575757';
         });
     });
- 
+
     function switchGroup(group) {
         saveToLocalStorage();
         currentGroup = group;
         GM_setValue('currentGroup', currentGroup);
         loadFromLocalStorage();
         updateGroupButtonStyles();
+        updateAutoLoginButtonText();
     }
- 
+
     function updateGroupButtonStyles() {
         const groupButtons = [groupAButton, groupBButton, groupCButton];
         groupButtons.forEach(button => {
@@ -149,7 +145,7 @@ function saveToggleImageVisibility() {
             }
         });
     }
- 
+
     let isMinimized = GM_getValue('isMinimized', true);
     function toggleContainer() {
         isMinimized = !isMinimized;
@@ -161,7 +157,7 @@ function saveToggleImageVisibility() {
         toggleButton.textContent = isMinimized ? 'Token Login' : '⛔Minimize';
         GM_setValue('isMinimized', isMinimized);
     }
- 
+
     let areInputsVisible = GM_getValue('areInputsVisible', true);
     function toggleTokenInputs() {
         areInputsVisible = !areInputsVisible;
@@ -171,7 +167,7 @@ function saveToggleImageVisibility() {
         });
         GM_setValue('areInputsVisible', areInputsVisible);
     }
- 
+
     function login(token) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
@@ -194,7 +190,7 @@ function saveToggleImageVisibility() {
             }
         }, 1000);
     }
- 
+
     function relogin() {
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
@@ -207,7 +203,7 @@ function saveToggleImageVisibility() {
             alert('No previously used token found. Please use a token first.');
         }
     }
- 
+
     function channelAccess() {
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
@@ -220,7 +216,7 @@ function saveToggleImageVisibility() {
             alert('No previously used token found. Please use a token first.');
         }
     }
- 
+
     function reloginToken(token) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
@@ -235,7 +231,7 @@ function saveToggleImageVisibility() {
             }
         }, 1000);
     }
- 
+
     function channelAccessToken(token) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
@@ -250,33 +246,30 @@ function saveToggleImageVisibility() {
             }
         }, 1000);
     }
- 
+
     function formatURL(url) {
         if (!url) {
             return '';
         }
- 
         if (url.startsWith('discord.gg/')) {
             return `https://${url}`;
         } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
             return `https://discord.gg/${url}`;
         }
- 
         return url;
     }
- 
+
     function formatChannelURL(url) {
         if (!url) {
             return '';
         }
- 
         if (url.startsWith('https://discord.com/channels/')) {
             return url;
         } else {
             return `https://discord.com/channels/${url}`;
         }
     }
- 
+
     function saveToLocalStorage() {
         const tokens = [];
         for (let i = 1; i <= maxTokens; i++) {
@@ -288,13 +281,13 @@ function saveToggleImageVisibility() {
         GM_setValue(`${currentGroup}_channelUrlInput`, channelUrlInput.value);
         GM_setValue('newTabCheckbox', newTabCheckbox.checked);
     }
- 
+
     function loadFromLocalStorage() {
         for (let i = 1; i <= maxTokens; i++) {
             const tokenInput = document.getElementById(`tokenInput${i}`);
             const savedToken = GM_getValue(`${currentGroup}_tokenInput${i}`, '');
             tokenInput.value = savedToken;
- 
+
             const contactButton = document.getElementById(`contactButton${i}`);
             if (tokenInput.value.trim() === '') {
                 contactButton.disabled = true;
@@ -314,8 +307,9 @@ function saveToggleImageVisibility() {
         const savedChannelURL = GM_getValue(`${currentGroup}_channelUrlInput`, '');
         channelUrlInput.value = savedChannelURL;
         newTabCheckbox.checked = GM_getValue('newTabCheckbox', false);
+        updateAutoLoginButtonText();
     }
- 
+
     function saveTokensToFile() {
         const tokens = [];
         for (let i = 1; i <= maxTokens; i++) {
@@ -332,7 +326,7 @@ function saveToggleImageVisibility() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
- 
+
     function loadTokensFromFile(event) {
         const file = event.target.files[0];
         if (file) {
@@ -347,40 +341,86 @@ function saveToggleImageVisibility() {
                         updateButtonState(tokenInput, `contactButton${index + 1}`);
                     }
                 });
+                updateAutoLoginButtonText();
             };
             reader.readAsText(file);
         }
     }
- 
+
+    // 新しいauto loginボタン名とトークンインデックス表示
+    function updateAutoLoginButtonText() {
+        // 現在のtoken index
+        let currentIndex = 0;
+        let lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
+        if (lastClickedButtonId) {
+            currentIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
+        }
+        // セットされてるtoken数
+        let setCount = 0;
+        for (let i = 1; i <= maxTokens; i++) {
+            const tokenInput = document.getElementById(`tokenInput${i}`);
+            if (tokenInput && tokenInput.value.trim() !== '') setCount++;
+        }
+        autoLoginButton.innerHTML = `🟢auto login <span style="font-size:13px;">(${currentIndex}/${setCount})</span>`;
+    }
+
     function autoLogin() {
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
+        let setCount = 0;
+        for (let i = 1; i <= maxTokens; i++) {
+            const tokenInput = document.getElementById(`tokenInput${i}`);
+            if (tokenInput && tokenInput.value.trim() !== '') setCount++;
+        }
+        if (setCount === 0) {
+            alert('No tokens set for auto login');
+            updateAutoLoginButtonText();
+            return;
+        }
+
         if (lastClickedButtonId) {
             const lastClickedButtonIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
-            const nextButtonIndex = lastClickedButtonIndex + 1;
-            if (nextButtonIndex <= maxTokens) {
+            let nextButtonIndex = lastClickedButtonIndex + 1;
+            // 次にセットされてるtokenを探す
+            while (nextButtonIndex <= maxTokens) {
+                const tokenInput = document.getElementById(`tokenInput${nextButtonIndex}`);
+                if (tokenInput && tokenInput.value.trim() !== '') break;
+                nextButtonIndex++;
+            }
+            if (nextButtonIndex > maxTokens || nextButtonIndex > setCount) {
+                alert('No more tokens available for auto login. Returning to the first token.');
+                // 最初にセットされてるtokenへ
+                for (let i = 1; i <= maxTokens; i++) {
+                    const tokenInput = document.getElementById(`tokenInput${i}`);
+                    if (tokenInput && tokenInput.value.trim() !== '') {
+                        const btn = document.getElementById(`contactButton${i}`);
+                        if (btn) btn.click();
+                        break;
+                    }
+                }
+            } else {
                 const nextButton = document.getElementById(`contactButton${nextButtonIndex}`);
                 if (nextButton) {
                     nextButton.click();
                 }
-            } else {
-                alert('No more tokens available for auto login. Returning to the first token.');
-                const firstButton = document.getElementById('contactButton1');
-                if (firstButton) {
-                    firstButton.click();
-                }
             }
         } else {
-            const firstButton = document.getElementById('contactButton1');
-            if (firstButton) {
-                firstButton.click();
+            // 最初にセットされてるtokenへ
+            for (let i = 1; i <= maxTokens; i++) {
+                const tokenInput = document.getElementById(`tokenInput${i}`);
+                if (tokenInput && tokenInput.value.trim() !== '') {
+                    const btn = document.getElementById(`contactButton${i}`);
+                    if (btn) btn.click();
+                    break;
+                }
             }
         }
+        updateAutoLoginButtonText();
     }
- 
+
     function buttonMouseOver(event) {
         event.target.style.backgroundColor = '#228B22';
     }
- 
+
     function buttonMouseOut(event) {
         const index = event.target.id.replace('contactButton', '');
         const isGreen = GM_getValue(`${currentGroup}_contactButton${index}_isGreen`, false);
@@ -388,7 +428,7 @@ function saveToggleImageVisibility() {
             event.target.style.backgroundColor = '#575757';
         }
     }
- 
+
     function updateButtonState(tokenInput, buttonId) {
         const contactButton = document.getElementById(buttonId);
         if (tokenInput.value.trim() === '') {
@@ -403,41 +443,44 @@ function saveToggleImageVisibility() {
             contactButton.addEventListener('mouseout', buttonMouseOut);
         }
     }
- 
+
     for (let i = 1; i <= maxTokens; i++) {
         const contactButton = document.getElementById(`contactButton${i}`);
         const tokenInput = document.getElementById(`tokenInput${i}`);
- 
+
         updateButtonState(tokenInput, `contactButton${i}`);
- 
+
         contactButton.addEventListener('click', () => {
             const token = tokenInput.value.trim();
             if (token) {
                 login(token);
- 
+
                 localStorage.setItem(`${currentGroup}_lastClickedButton`, `contactButton${i}`);
- 
+
                 for (let j = 1; j <= maxTokens; j++) {
                     const btn = document.getElementById(`contactButton${j}`);
                     btn.style.backgroundColor = '#575757';
                     GM_setValue(`${currentGroup}_contactButton${j}_isGreen`, false);
                 }
- 
+
                 contactButton.style.backgroundColor = '#228B22';
                 GM_setValue(`${currentGroup}_contactButton${i}_isGreen`, true);
- 
+
                 localStorage.setItem(`${currentGroup}_lastUsedToken`, token);
+
+                updateAutoLoginButtonText();
             } else {
                 alert('Please enter a valid token!');
             }
         });
- 
+
         tokenInput.addEventListener('input', () => {
             saveToLocalStorage();
             updateButtonState(tokenInput, `contactButton${i}`);
+            updateAutoLoginButtonText();
         });
     }
- 
+
     window.addEventListener('load', () => {
         loadFromLocalStorage();
         const isMinimized = GM_getValue('isMinimized', true);
@@ -450,12 +493,12 @@ function saveToggleImageVisibility() {
         mainContainer.style.bottom = isMinimized ? '105px' : 'auto';
         toggleButton.style.padding = '10px';
         toggleButton.textContent = isMinimized ? 'Token Login' : '⛔Minimize';
- 
+
         const tokenInputs = tokenInputsContainer.querySelectorAll('input[type="text"]');
         tokenInputs.forEach(input => {
             input.style.display = areInputsVisible ? 'block' : 'none';
         });
- 
+
         const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
             const lastClickedButton = document.getElementById(lastClickedButtonId);
@@ -463,9 +506,10 @@ function saveToggleImageVisibility() {
                 lastClickedButton.style.backgroundColor = '#228B22';
             }
         }
- 
+
         updateGroupButtonStyles();
+        updateAutoLoginButtonText();
     });
- 
+
     window.addEventListener('beforeunload', saveToLocalStorage);
 })();
