@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         discord token login / AARR Manage multi Discord accounts 
+// @name         discord token login / AARR Manage multi Discord accounts
 // @namespace    http://tampermonkey.net/
 // @version      6.3
 // @description  The best token loginer with the most features by AARR
@@ -347,21 +347,21 @@
         }
     }
 
-   
+
     function updateAutoLoginButtonText() {
-       
+
         let currentIndex = 0;
         let lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
         if (lastClickedButtonId) {
             currentIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
         }
-        
+
         let setCount = 0;
         for (let i = 1; i <= maxTokens; i++) {
             const tokenInput = document.getElementById(`tokenInput${i}`);
             if (tokenInput && tokenInput.value.trim() !== '') setCount++;
         }
-        autoLoginButton.innerHTML = `🟢auto login <span style="font-size:13px;">(${currentIndex}/${setCount})</span>`;
+        autoLoginButton.innerHTML = `🟢Auto switch login <span style="font-size:13px;">(${currentIndex}/${setCount})</span>`;
     }
 
     function autoLogin() {
@@ -380,7 +380,7 @@
         if (lastClickedButtonId) {
             const lastClickedButtonIndex = parseInt(lastClickedButtonId.replace('contactButton', ''), 10);
             let nextButtonIndex = lastClickedButtonIndex + 1;
-           
+
             while (nextButtonIndex <= maxTokens) {
                 const tokenInput = document.getElementById(`tokenInput${nextButtonIndex}`);
                 if (tokenInput && tokenInput.value.trim() !== '') break;
@@ -388,7 +388,7 @@
             }
             if (nextButtonIndex > maxTokens || nextButtonIndex > setCount) {
                 alert('No more tokens available for auto login. Returning to the first token.');
-               
+
                 for (let i = 1; i <= maxTokens; i++) {
                     const tokenInput = document.getElementById(`tokenInput${i}`);
                     if (tokenInput && tokenInput.value.trim() !== '') {
@@ -404,7 +404,7 @@
                 }
             }
         } else {
-            
+
             for (let i = 1; i <= maxTokens; i++) {
                 const tokenInput = document.getElementById(`tokenInput${i}`);
                 if (tokenInput && tokenInput.value.trim() !== '') {
