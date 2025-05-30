@@ -43,7 +43,7 @@
         <div id="mainContainer" style="position: fixed; bottom: 200px; right: 10px; background-color: #2f3136; color: #ffffff; padding: 10px; border-radius: 5px; z-index: 1000; width: 175px; height: 29px; overflow-y: auto;">
             <button id="toggleButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">Token Login</button>
             <div id="content" style="display: none;">
-                <h2 style="margin: 0 0 10px 0;">AARR Multi Token Login V6.2</h2>
+                <h2 style="margin: 0 0 10px 0;">AARR Multi Token Login V6.3</h2>
                 <a href="https://aarr-homepage.github.io/page/about5.html" target="_blank" style="color: #00BFFF; text-decoration: underline; display: block; margin-bottom: 10px;">🔧other tools</a>
                 <a href="https://greasyfork.org/ja/scripts/523829-manage-multi-discord-accounts/code" target="_blank" style="color: #00BFFF; text-decoration: underline; display: block; margin-bottom: 10px;">⚙️source code</a>
                 <div id="groupButtons" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
