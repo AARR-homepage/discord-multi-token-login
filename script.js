@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         discord token login / AARR Manage multi Discord accounts
 // @namespace    http://tampermonkey.net/
-// @version      6.3
+// @version      6.4
 // @description  The best token loginer with the most features by AARR
 // @author       AARR
 // @match        https://discord.com/*
@@ -43,9 +43,8 @@
         <div id="mainContainer" style="position: fixed; bottom: 200px; right: 10px; background-color: #2f3136; color: #ffffff; padding: 10px; border-radius: 5px; z-index: 1000; width: 175px; height: 29px; overflow-y: auto;">
             <button id="toggleButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">Token Login</button>
             <div id="content" style="display: none;">
-                <h2 style="margin: 0 0 10px 0;">AARR Multi Token Login V6.3</h2>
+                <h2 style="margin: 0 0 10px 0;">AARR Multi Token Login V6.4</h2>
                 <a href="https://aarr-homepage.github.io/page/about5.html" target="_blank" style="color: #00BFFF; text-decoration: underline; display: block; margin-bottom: 10px;">🔧other tools</a>
-                <a href="https://greasyfork.org/ja/scripts/523829-manage-multi-discord-accounts/code" target="_blank" style="color: #00BFFF; text-decoration: underline; display: block; margin-bottom: 10px;">⚙️source code</a>
                 <div id="groupButtons" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <button id="groupA" style="width: 30%; height: 30px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer;">A</button>
                     <button id="groupB" style="width: 30%; height: 30px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer;">B</button>
@@ -66,6 +65,7 @@
                 <h5 style="margin: 0 0 10px 0;">Channel URL</h5>
                 <input type="text" id="channelUrlInput" placeholder="Channel/Message URL" style="width: 100%; margin-bottom: 5px; display: block; background-color: #2f3136; color: #32CD32; border: 1px solid #32CD32; padding: 5px;">
                 <button id="channelAccessButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">📌Channel access</button>
+                <button id="questAccessButton" style="width: 100%; margin-bottom: 10px; padding: 10px; background-color: #575757; color: #ffffff; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.3s;">💎Quest page</button>
                 <h5 style="margin: 0 0 10px 0;">⚠️don't logout, token will reset</h5>
                 <label style="display: block; margin-bottom: 10px;">
                 <div id="tokenInputsContainer">
@@ -86,6 +86,7 @@
     const autoLoginButton = document.getElementById('autoLoginButton');
     const reloginButton = document.getElementById('reloginButton');
     const channelAccessButton = document.getElementById('channelAccessButton');
+    const questAccessButton = document.getElementById('questAccessButton');
     const fileInput = document.getElementById('fileInput');
     const tokenInputsContainer = document.getElementById('tokenInputsContainer');
     const content = document.getElementById('content');
@@ -104,13 +105,14 @@
     autoLoginButton.addEventListener('click', autoLogin);
     reloginButton.addEventListener('click', () => relogin(false));
     channelAccessButton.addEventListener('click', () => channelAccess());
+    questAccessButton.addEventListener('click', () => questAccess());
     fileInput.addEventListener('change', loadTokensFromFile);
     groupAButton.addEventListener('click', () => switchGroup('A'));
     groupBButton.addEventListener('click', () => switchGroup('B'));
     groupCButton.addEventListener('click', () => switchGroup('C'));
     newTabCheckbox.addEventListener('change', () => GM_setValue('newTabCheckbox', newTabCheckbox.checked));
 
-    const buttons = [toggleButton, saveButton, loadButton, hideButton, autoLoginButton, reloginButton, channelAccessButton];
+    const buttons = [toggleButton, saveButton, loadButton, hideButton, autoLoginButton, reloginButton, channelAccessButton, questAccessButton];
     buttons.forEach(button => {
         button.addEventListener('mouseover', () => {
             if (button === autoLoginButton) {
@@ -168,13 +170,13 @@
         GM_setValue('areInputsVisible', areInputsVisible);
     }
 
-    function login(token) {
+    function login(token, destinationURL) {
         let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
         iframe.contentWindow.localStorage.token = `"${token}"`;
         document.body.removeChild(iframe);
         setTimeout(() => {
-            const redirectLink = formatURL(urlInput.value.trim());
+            let redirectLink = destinationURL || formatURL(urlInput.value.trim());
             if (redirectLink) {
                 if (newTabCheckbox.checked) {
                     window.open(redirectLink, '_blank');
@@ -211,6 +213,20 @@
             if (lastClickedButton) {
                 const token = document.getElementById(`tokenInput${lastClickedButtonId.replace('contactButton', '')}`).value.trim();
                 channelAccessToken(token);
+            }
+        } else {
+            alert('No previously used token found. Please use a token first.');
+        }
+    }
+
+    function questAccess() {
+        const lastClickedButtonId = localStorage.getItem(`${currentGroup}_lastClickedButton`);
+        if (lastClickedButtonId) {
+            const lastClickedButton = document.getElementById(lastClickedButtonId);
+            if (lastClickedButton) {
+                const token = document.getElementById(`tokenInput${lastClickedButtonId.replace('contactButton', '')}`).value.trim();
+                // Login and redirect to Quests
+                login(token, "https://discord.com/discovery/quests");
             }
         } else {
             alert('No previously used token found. Please use a token first.');
